@@ -173,5 +173,91 @@ def Plot_Number_and_Weight_Averages(ode_result, T ):
     plt.show()
 
     return Ww[-1], Wn[-1]
+    
+def Plot_Conversion(ode_result,  M0, T):
+    conversion =1 - (ode_result.y[1,:]/M0 )
+    plt.plot(ode_result.t, conversion, label='Conversion')
+    plt.xlabel('Time (sec)')
+    plt.ylabel('Fraction Converted')
+    plt.title('Conversion')
+    plt.legend()
+    plt.grid()    
+    
+def Plot_2_Conversions(ode_result1, ode_result2, M0, T):
+    fig = plt.figure(figsize=(12,6))
+    # Create two plots
+    ax1 = fig.add_subplot(1, 2, 1)
+    ax2 = fig.add_subplot(1, 2, 2)
+    # Create and Plot the first set of data
+    conversion1 =1 - (ode_result1.y[1,:]/M0 )
+    ax1.plot(ode_result1.t,conversion1, label='Conversion[1]', )
+    ax1.set_ylabel('Fraction Converted')
+    ax1.set_xlabel('Time(sec)')
+    ax1.grid()
+    ax1.set_title(f'Run Temperature = {T} ' )
+    ax1.legend() #NOTE essential for the labels
+    conversion2 =1 - (ode_result2.y[1,:]/M0 )
+    ax2.plot(ode_result2.t, conversion2, label = 'Conversion[2]')
+    ax2.set_ylabel('Fraction Converted')
+    ax2.set_xlabel('Time(s)')
+    ax2.grid()
+    ax2.set_title(f'Run Temperature = {T} ' )
+    ax2.legend()
+    # Change the spacing between the plots
+    # Increase the spacing between the plots
+    plt.subplots_adjust(wspace=0.4, hspace=0.4)
+    plt.show()
+    return
+def Plot_Conversion_Hours(ode_result, M0, T):
+    conversion =1 - (ode_result.y[1,:]/M0 )
+    x =  ode_result.t/3600
+    plt.plot( x, conversion, label='Conversion')
+    plt.xlabel('Time (hours)')
+    plt.ylabel('Fraction Converted')
+    plt.title('Conversion')
+    plt.legend()
+    plt.grid()    
 
+def Plot_AKS_Conversion_Versus_Chain_Length(ode_result, M0, T):
+    conversion =1 - (ode_result.y[1][1:]/M0 )
+    Xn = ode_result.y[3][1:]/ode_result.y[2][1:]  #avoid divide by zero at time 0
+    plt.plot( conversion, Xn,  label='Length'  )
+    plt.ylabel ('Chain Length' )
+    plt.xlabel('Conversion')
+    plt.title( 'Conversion versus Chain Length')
+    plt.legend()
+    plt.grid()    
+
+
+
+def Plot_All_Moments(ode_result, title):
+    fig, axes = plt.subplots(2, 3, figsize=(12, 6))  # Create a figure with 2 rows and 3 columns
+    
+    for z in range(1, 7):
+        ax = axes.flat[z - 1]  # Get the corresponding subplot axis
+        ax.plot(ode_result.t[1:], ode_result.y[z][1:])
+        ax.set_title(f"Moment {z} ")
+        ax.set_xlabel("Time")
+        ax.set_ylabel("Value")
+        ax.grid()
+    
+    fig.suptitle("Moments from " + title, fontsize=16)  # Set the overall title
+    plt.tight_layout()  # Adjust layout for better spacing
+    plt.show()
+    return
+
+def Plot_Conversions_Versus_Chain_Length(ode_result1,ode_result2 , M0, T):
+    conversion =1 - (ode_result1.y[1][1:]/M0 )
+    #Lambda1 / Lambda 0
+    Xn_AKS = ode_result1.y[3][1:]/ode_result1.y[2][1:]  #avoid divide by zero at time 0
+    Xn_Dhooge =  ode_result2.y[6][1:]/ode_result2.y[5][1:]  #avoid divide by zero at time 0
+    plt.plot( conversion, Xn_AKS,  label='AKS'  )
+    plt.plot( conversion, Xn_Dhooge,  label='Dhooge'  )
+    plt.ylabel ('Chain Length' )
+    plt.xlabel('Conversion')
+    plt.title( 'Conversion versus Chain Length')
+    plt.legend()
+    plt.grid()    
+    plt.show()
+    return
 
